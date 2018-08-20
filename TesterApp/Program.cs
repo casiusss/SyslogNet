@@ -79,6 +79,8 @@ namespace TesterApp
 			{
 				Console.WriteLine("ERROR: " + ex);
 			}
+
+		    Console.ReadKey();
 		}
 
 		private static SyslogMessage CreateSyslogMessage(Options options)
