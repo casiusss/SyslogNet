@@ -1,4 +1,6 @@
 using System;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using CommandLine;
 using SyslogNet.Client;
@@ -58,11 +60,14 @@ namespace TesterApp
 							? (ISyslogMessageSerializer)new SyslogRfc3164MessageSerializer()
 							: (ISyslogMessageSerializer)new SyslogLocalMessageSerializer();
 
-					ISyslogMessageSender sender = options.NetworkProtocol == "tcp"
-						? (ISyslogMessageSender)new SyslogEncryptedTcpSender(options.SyslogServerHostname, options.SyslogServerPort)
-						: options.NetworkProtocol == "udp"
-							? (ISyslogMessageSender)new SyslogUdpSender(options.SyslogServerHostname, options.SyslogServerPort)
-							: (ISyslogMessageSender)new SyslogLocalSender();
+				    //ISyslogMessageSender sender = options.NetworkProtocol == "tcp"
+				    //    ? (ISyslogMessageSender)new SyslogEncryptedTcpSender(options.SyslogServerHostname, options.SyslogServerPort, Timeout.Infinite, true)
+				    //    : options.NetworkProtocol == "udp"
+				    //        ? (ISyslogMessageSender)new SyslogUdpSender(options.SyslogServerHostname, options.SyslogServerPort)
+				    //        : (ISyslogMessageSender)new SyslogLocalSender();
+
+				    ISyslogMessageSender sender = new SyslogEncryptedTcpSender(options.SyslogServerHostname, options.SyslogServerPort, SecurityProtocolType.Tls12, 
+				        new X509Certificate2Collection(new X509Certificate2(@"C:\Users\9I00014\Development\IHE\certs\client3-key.p12", "gevko")), Timeout.Infinite, true);
 
 					SyslogMessage msg1 = CreateSyslogMessage(options);
 					sender.Send(msg1, serializer);
