@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TesterApp": {
+      "commandName": "Project",
+      "commandLineArgs": "-s 51.144.104.151 -r 1025"
+    }
+  }
+}
